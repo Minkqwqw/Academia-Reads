@@ -32,7 +32,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="md:w-1/3">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 mb-6">
                     <h3 class="font-bold text-lg border-b pb-2 mb-4">Customer Details</h3>
@@ -48,7 +48,7 @@
                     @if(session('success'))
                         <div class="bg-green-100 text-green-700 px-3 py-2 rounded mb-4 text-sm">{{ session('success') }}</div>
                     @endif
-                    <form action="{{ route('admin.orders.update_status', $order) }}" method="POST">
+                    <form action="{{ route('admin.orders.updateStatus', $order) }}" method="POST">
                         @csrf
                         @method('PATCH')
                         <div class="mb-4">

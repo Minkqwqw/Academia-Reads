@@ -86,6 +86,10 @@ Route::middleware(["auth", "role:admin"])
             AdminOrderController::class,
             "updateStatus",
         ])->name("orders.updateStatus");
+        Route::delete("orders/{order}", [
+            AdminOrderController::class,
+            "destroy",
+        ])->name("orders.destroy");
 
         Route::get("messages", [AdminMessageController::class, "index"])->name(
             "messages.index",

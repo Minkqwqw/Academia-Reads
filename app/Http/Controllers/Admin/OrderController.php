@@ -22,7 +22,6 @@ class OrderController extends Controller
 
     /**
      * Update status pesanan dan mengelola logika stok otomatis.
-     * Alur: Validasi -> Cek Status Lama -> Update -> Potong Stok (jika status berubah ke 'completed').
      */
     public function updateStatus(Request $request, Order $order)
     {
@@ -37,17 +36,24 @@ class OrderController extends Controller
         $order->update(["status" => $newStatus]);
 
         /**
-         * 2. Logika Pemotongan Stok (Otomatisasi Stok)
-         * Stok hanya dipotong jika status SEBELUMNYA bukan 'completed'
-         * dan status BARU adalah 'completed'.
-         * Hal ini untuk mencegah 'double-counting' (stok berkurang berkali-kali).
+         * 2. Logika Pemotongan/Pengembalian Stok
          */
+        // Potong stok jika berubah ke 'completed'
         if ($originalStatus !== "completed" && $newStatus === "completed") {
             $order->load("items.book");
             foreach ($order->items as $item) {
                 if ($item->book) {
-                    // Eksekusi pengurangan stok: Stok Akhir = Stok Awal - Quantity
                     $item->book->decrement("stock", $item->quantity);
+                }
+            }
+        }
+
+        // Kembalikan stok jika berubah DARI 'completed' ke status lain
+        if ($originalStatus === "completed" && $newStatus !== "completed") {
+            $order->load("items.book");
+            foreach ($order->items as $item) {
+                if ($item->book) {
+                    $item->book->increment("stock", $item->quantity);
                 }
             }
         }
@@ -55,5 +61,26 @@ class OrderController extends Controller
         return redirect()
             ->back()
             ->with("success", "Order status updated successfully.");
+    }
+
+    /**
+     * Hapus history pesanan dengan pengembalian stok jika statusnya completed.
+     */
+    public function destroy(Order $order)
+    {
+        if ($order->status === "completed") {
+            $order->load("items.book");
+            foreach ($order->items as $item) {
+                if ($item->book) {
+                    $item->book->increment("stock", $item->quantity);
+                }
+            }
+        }
+
+        $order->delete();
+
+        return redirect()
+            ->route("admin.orders.index")
+            ->with("success", "Order history deleted successfully.");
     }
 }

@@ -11,13 +11,17 @@ class RoleManager
 {
     /**
      * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * Logika: Memeriksa apakah user sudah login DAN memiliki role yang sesuai.
+     * Jika tidak, sistem akan menghentikan request (Abort 403).
      */
-    public function handle(Request $request, Closure $next, string $role): Response
-    {
+    public function handle(
+        Request $request,
+        Closure $next,
+        string $role,
+    ): Response {
+        // Proteksi Multi-Actor: Memastikan role user sesuai dengan requirement route
         if (!Auth::check() || Auth::user()->role !== $role) {
-            abort(403, 'Unauthorized access.');
+            abort(403, "Unauthorized access.");
         }
 
         return $next($request);

@@ -20,6 +20,10 @@ class OrderController extends Controller
         return view("admin.orders.show", compact("order"));
     }
 
+    /**
+     * Update status pesanan dan mengelola logika stok otomatis.
+     * Alur: Validasi -> Cek Status Lama -> Update -> Potong Stok (jika status berubah ke 'completed').
+     */
     public function updateStatus(Request $request, Order $order)
     {
         $request->validate([
@@ -29,12 +33,20 @@ class OrderController extends Controller
         $originalStatus = $order->status;
         $newStatus = $request->status;
 
+        // 1. Update status pesanan di database
         $order->update(["status" => $newStatus]);
 
+        /**
+         * 2. Logika Pemotongan Stok (Otomatisasi Stok)
+         * Stok hanya dipotong jika status SEBELUMNYA bukan 'completed'
+         * dan status BARU adalah 'completed'.
+         * Hal ini untuk mencegah 'double-counting' (stok berkurang berkali-kali).
+         */
         if ($originalStatus !== "completed" && $newStatus === "completed") {
             $order->load("items.book");
             foreach ($order->items as $item) {
                 if ($item->book) {
+                    // Eksekusi pengurangan stok: Stok Akhir = Stok Awal - Quantity
                     $item->book->decrement("stock", $item->quantity);
                 }
             }

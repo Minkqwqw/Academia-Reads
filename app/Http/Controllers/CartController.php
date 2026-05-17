@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use Illuminate\Http\Request;
 
+// Session sementara di RAM
 class CartController extends Controller
 {
     public function index()

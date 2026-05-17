@@ -246,6 +246,24 @@
                 });
             }
         });
+
+        /**
+         * URL Sanitization Logic
+         * Menghapus parameter pencarian yang kosong agar URL tetap bersih.
+         * Contoh: /search?category=romance daripada /search?search=&category=romance&author=
+         */
+        const searchForm = document.querySelector('form[action="{{ route('books.search') }}"]');
+        if (searchForm) {
+            searchForm.addEventListener('submit', function() {
+                const inputs = this.querySelectorAll('input, select');
+                inputs.forEach(input => {
+                    if (!input.value) {
+                        input.disabled = true; // Disable input kosong agar tidak dikirim ke URL
+                    }
+                });
+            });
+        }
+
     </script>
 </body>
 </html>

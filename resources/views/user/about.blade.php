@@ -52,12 +52,12 @@
         </div>
     </header>
 
-    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
-        <div class="bg-white rounded-xl shadow-sm border p-10 md:p-16 text-center">
+    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-24 lg:py-32 w-full">
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-12 md:p-20 lg:p-24 text-center">
 
-            <h1 class="text-4xl md:text-5xl font-serif font-bold text-navy mb-8">About Academia Reads</h1>
+            <h1 class="text-4xl md:text-5xl font-serif font-bold text-navy mb-12">About Academia Reads</h1>
 
-            <div class="space-y-6 text-gray-700 text-lg leading-relaxed text-left">
+            <div class="space-y-6 text-gray-700 pt-14 text-lg leading-relaxed text-left">
                 <p>
                     <strong>Academia Reads</strong> adalah toko buku digital terkemuka yang berdedikasi untuk menyediakan akses ke literatur akademis, jurnal penelitian, dan buku-buku edukatif berkualitas tinggi. Kami hadir untuk melayani kebutuhan intelektual mahasiswa, dosen, peneliti, dan para pembelajar sepanjang hayat.
                 </p>

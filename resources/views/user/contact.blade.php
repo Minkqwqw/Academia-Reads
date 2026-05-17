@@ -57,12 +57,13 @@
         </div>
     </header>
 
-    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
-        <div class="bg-white rounded-xl shadow-sm border p-10 md:p-16">
+    <!--isi konten-->
+    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-24 lg:py-32 w-full">
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-12 md:p-20 lg:p-24">
 
-            <div class="text-center mb-10">
-                <h1 class="text-4xl md:text-5xl font-serif font-bold text-navy mb-4">Contact Us</h1>
-                <p class="text-gray-600 text-lg">Punya pertanyaan atau masukan? Jangan ragu untuk menghubungi kami.</p>
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-serif font-bold text-navy mb-6">Contact Us</h1>
+                <p class="text-gray-600 text-lg max-w-2xl mx-auto">Punya pertanyaan atau masukan? Jangan ragu untuk menghubungi kami. Tim kami siap membantu Anda.</p>
             </div>
 
             @if(session('success'))

@@ -101,9 +101,10 @@
 
                         <div class="w-full md:w-auto">
                             @if($book->stock > 0)
-                                <form action="{{ route('cart.add', $book->id) }}" method="POST">
+                                <form action="{{ route('cart.add', $book->id) }}" method="POST" class="flex items-center gap-3">
                                     @csrf
-                                    <button type="submit" class="w-full md:w-auto bg-emerald text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-opacity-90 transition shadow-sm">
+                                    <input type="number" name="quantity" value="1" min="1" max="{{ $book->stock }}" class="w-20 rounded-lg border-gray-300 shadow-sm focus:border-emerald focus:ring focus:ring-emerald focus:ring-opacity-50 text-center text-lg py-2.5">
+                                    <button type="submit" class="flex-grow md:flex-none bg-emerald text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-opacity-90 transition shadow-sm whitespace-nowrap">
                                         Masukkan ke Keranjang
                                     </button>
                                 </form>

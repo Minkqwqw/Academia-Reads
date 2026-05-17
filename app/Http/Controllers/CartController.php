@@ -17,19 +17,25 @@ class CartController extends Controller
     public function add(Request $request, Book $book)
     {
         $cart = session()->get("cart", []);
+        $quantity = $request->input("quantity", 1);
 
         // Optional: you could validate that added amount + current amount <= stock here,
         // but for a simple cart, we just add.
         if (isset($cart[$book->id])) {
-            $cart[$book->id]["quantity"]++;
+            $cart[$book->id]["quantity"] += $quantity;
         } else {
             $cart[$book->id] = [
                 "id" => $book->id,
                 "title" => $book->title,
-                "quantity" => 1,
+                "quantity" => $quantity,
                 "price" => $book->price,
                 "cover_image" => $book->cover_image,
             ];
+        }
+
+        // Ensure total quantity doesn't exceed stock
+        if ($cart[$book->id]["quantity"] > $book->stock) {
+            $cart[$book->id]["quantity"] = $book->stock;
         }
 
         session()->put("cart", $cart);

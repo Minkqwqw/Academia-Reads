@@ -164,10 +164,13 @@
                             </div>
 
                             @if($book->stock > 0)
-                                <form action="{{ route('cart.add', $book->id) }}" method="POST" class="mt-auto">
-                                    @csrf
-                                    <button type="submit" class="w-full bg-emerald text-white rounded py-2 text-sm font-medium hover:bg-opacity-90 transition">Add to Cart</button>
-                                </form>
+                                <button type="button"
+                                    data-action="{{ route('cart.add', $book->id) }}"
+                                    data-book-title="{{ $book->title }}"
+                                    data-book-stock="{{ $book->stock }}"
+                                    class="add-to-cart-btn w-full bg-emerald text-white rounded py-2 text-sm font-medium hover:bg-opacity-90 transition mt-auto">
+                                    Add to Cart
+                                </button>
                             @else
                                 <button disabled class="w-full bg-gray-300 text-gray-500 rounded py-2 text-sm font-medium cursor-not-allowed mt-auto">Out of Stock</button>
                             @endif
@@ -194,6 +197,31 @@
             </div>
         </footer>
     </div>
+
+        <!-- Add to Cart Modal -->
+        <div id="cartModal" class="fixed inset-0 z-[60] hidden bg-black bg-opacity-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-lg shadow-xl w-[90%] max-w-[320px] overflow-hidden flex flex-col">
+                <div class="p-4 border-b flex justify-between items-center bg-gray-50">
+                    <h3 class="text-lg font-bold text-gray-800">Add to Cart</h3>
+                    <button type="button" id="closeCartModal" class="text-gray-400 hover:text-gray-600 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                <form id="cartForm" method="POST" action="">
+                    @csrf
+                    <div class="p-6">
+                        <p class="mb-4 text-gray-700">Item: <strong id="modalBookTitle"></strong></p>
+                        <label for="modalQuantity" class="block text-sm font-bold text-gray-700 mb-2">Quantity</label>
+                        <input type="number" id="modalQuantity" name="quantity" value="1" min="1" class="w-full rounded-md border-gray-300 shadow-sm focus:border-emerald focus:ring focus:ring-emerald focus:ring-opacity-50">
+                        <p id="modalStockInfo" class="text-xs text-gray-500 mt-2"></p>
+                    </div>
+                    <div class="p-4 border-t flex justify-end gap-3 bg-gray-50">
+                        <button type="button" id="cancelCartModal" class="px-4 py-2 bg-gray-200 text-gray-700 rounded font-medium hover:bg-gray-300 transition">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-emerald text-white rounded font-medium hover:bg-opacity-90 transition">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
     <script>
         window.addEventListener('load', function() {
@@ -260,6 +288,41 @@
                     if (!input.value) {
                         input.disabled = true; // Disable input kosong agar tidak dikirim ke URL
                     }
+                });
+            });
+        }
+
+        // Add to Cart Modal Logic
+        const cartModal = document.getElementById('cartModal');
+        const closeCartModal = document.getElementById('closeCartModal');
+        const cancelCartModal = document.getElementById('cancelCartModal');
+        const cartForm = document.getElementById('cartForm');
+        const modalBookTitle = document.getElementById('modalBookTitle');
+        const modalQuantity = document.getElementById('modalQuantity');
+        const modalStockInfo = document.getElementById('modalStockInfo');
+        const addToCartBtns = document.querySelectorAll('.add-to-cart-btn');
+
+        if (cartModal) {
+            function closeModal() {
+                cartModal.classList.add('hidden');
+            }
+
+            closeCartModal.addEventListener('click', closeModal);
+            cancelCartModal.addEventListener('click', closeModal);
+
+            addToCartBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const actionUrl = this.getAttribute('data-action');
+                    const bookTitle = this.getAttribute('data-book-title');
+                    const bookStock = parseInt(this.getAttribute('data-book-stock'));
+
+                    modalBookTitle.textContent = bookTitle;
+                    modalQuantity.value = 1;
+                    modalQuantity.max = bookStock;
+                    modalStockInfo.textContent = `Tersedia ${bookStock} stok.`;
+
+                    cartForm.action = actionUrl;
+                    cartModal.classList.remove('hidden');
                 });
             });
         }
